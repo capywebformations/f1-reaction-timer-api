@@ -1,0 +1,52 @@
+name: Run tests and linting
+on: [pull_request]
+
+jobs:
+  tests:
+    name: Run tests and check code quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.8.1"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Cache Node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm
+          key: pnpm-${{ runner.os }}-${{ hashFiles('api/pnpm-lock.json') }}
+          restore-keys: |
+            pnpm-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: pnpm install
+        working-directory: api
+
+      - name: Install nyc for coverage
+        run: pnpm install nyc --save-dev
+        working-directory: api
+
+      - name: Run linter
+        run: pnpm run lint
+        working-directory: api
+
+      - name: Run tests with coverage
+        run: npx nyc pnpm test
+        working-directory: api
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./api/coverage/*.json
+          flags: unittests
+          name: code-coverage-report
+          fail_ci_if_error: true

@@ -1,0 +1,57 @@
+# Dépendances
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+
+# Fichiers de build
+dist/
+build/
+*.js.map
+
+# Fichiers de configuration d'environnement
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Fichiers d'éditeur
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Fichiers de couverture de test
+coverage/
+
+# Fichiers temporaires
+tmp/
+temp/
+
+# Fichiers de débogage TypeScript
+tsconfig.tsbuildinfo
+
+# Fichiers de cache
+.npm
+.eslintcache
+
+# Fichiers spécifiques à TypeScript
+*.tsbuildinfo
+*.js
+*.js.map
+*.d.ts
+
+# Exclure les fichiers JS sauf dans certains dossiers spécifiques
+# Décommentez les lignes suivantes si vous avez des fichiers JS que vous voulez inclure
+# !webpack.config.js
+!jest.config.js
+
+# Fichiers de documentation générés automatiquement
+docs/

@@ -1,0 +1,16 @@
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    volumes:
+      - ./api/:/home/node/app
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"

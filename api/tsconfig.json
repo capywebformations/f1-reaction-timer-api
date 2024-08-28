@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "target": "ES2020", // Version ECMAScript cible
+        "module": "commonjs", // Système de modules utilisé
+        "rootDir": "src", // Répertoire racine des fichiers source
+        "outDir": "dist", // Répertoire de sortie des fichiers compilés
+        "strict": true, // Activer toutes les vérifications strictes
+        "esModuleInterop": true, // Activer l'interopérabilité des modules ES
+        "skipLibCheck": true, // Ignorer la vérification des fichiers de définition de bibliothèque
+        "forceConsistentCasingInFileNames": true, // Forcer la casse cohérente dans les noms de fichiers
+        "resolveJsonModule": true, // Permettre l'importation de modules JSON
+        "types": [
+            "node", // Types pour Node.js
+            "jest" // Types pour Jest
+        ]
+    },
+    "include": [
+        "src/**/*.ts" // Inclure tous les fichiers TypeScript dans src
+    ],
+    "exclude": [
+        "node_modules", // Exclure le répertoire node_modules
+        "dist" // Exclure le répertoire dist
+    ]
+}
