@@ -3,9 +3,9 @@ import jwt from 'jsonwebtoken';
 import User, { IUser } from '../models/user.model';
 
 class AuthService {
-    static async register(userData: { email: string, password: string, role: boolean }): Promise<IUser> {
+    static async register(userData: { email: string, password: string }): Promise<IUser> {
         const hashedPassword = await bcrypt.hash(userData.password, 10);
-        const user = new User({ ...userData, password: hashedPassword });
+        const user = new User({ ...userData, password: hashedPassword, role: true }); // Set role to true for 'user'
         return await user.save();
     }
 

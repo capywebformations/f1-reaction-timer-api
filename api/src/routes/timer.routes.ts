@@ -43,26 +43,32 @@ router.post('/submit-reaction-time', authenticate, (req: AuthenticatedRequest, r
 
 /**
  * @swagger
- * /timer/get-reaction-times/{userId}:
+ * /timer/get-reaction-times:
  *   get:
- *     summary: Retrieve reaction times for a user
+ *     summary: Retrieve reaction times for the authenticated user
  *     tags: [Timer]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: userId
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the user
  *     responses:
  *       200:
  *         description: List of reaction times
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   user_id:
+ *                     type: string
+ *                     description: The ID of the user
+ *                   time:
+ *                     type: number
+ *                     description: Reaction time in milliseconds
  *       400:
  *         description: Bad request
  */
-router.get('/get-reaction-times/:userId', authenticate, (req: AuthenticatedRequest, res, next) => {
+router.get('/get-reaction-times', authenticate, (req: AuthenticatedRequest, res, next) => {
     TimerController.getReactionTimes(req, res).catch(next);
 });
 

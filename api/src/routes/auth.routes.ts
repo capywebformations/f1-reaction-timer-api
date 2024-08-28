@@ -25,7 +25,6 @@ const router = Router();
  *             required:
  *               - email
  *               - password
- *               - role
  *             properties:
  *               email:
  *                 type: string
@@ -33,12 +32,17 @@ const router = Router();
  *               password:
  *                 type: string
  *                 description: User's password
- *               role:
- *                 type: boolean
- *                 description: User's role (0 = admin, 1 = user)
  *     responses:
  *       201:
- *         description: The user was successfully created
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User registered successfully
  *       400:
  *         description: Bad request
  */
@@ -69,6 +73,13 @@ router.post('/register', AuthController.register);
  *     responses:
  *       200:
  *         description: Successfully logged in
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
  *       400:
  *         description: Invalid credentials
  */
