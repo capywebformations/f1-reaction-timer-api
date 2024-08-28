@@ -1,9 +1,11 @@
 module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
-    transform: {
-        '^.+\\.tsx?$': 'ts-jest',
+    testMatch: ['**/tests/**/*.test.ts'], // Adjust according to your test file locations
+    moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/src/$1',
     },
-    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-    transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
+    clearMocks: true,
+    collectCoverage: true,
+    collectCoverageFrom: ['src/**/*.ts', '!src/**/index.ts', '!src/**/*.d.ts'],
 };

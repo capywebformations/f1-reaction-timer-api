@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import TimerController from '../controllers/timer.controller';
-import { authenticate, AuthenticatedRequest } from '../middlewares/auth.middleware';
+import {
+  authenticate,
+  AuthenticatedRequest,
+} from '../middlewares/auth.middleware';
 
 const router = Router();
 
@@ -37,9 +40,13 @@ const router = Router();
  *       400:
  *         description: Bad request
  */
-router.post('/submit-reaction-time', authenticate, (req: AuthenticatedRequest, res, next) => {
+router.post(
+  '/submit-reaction-time',
+  authenticate,
+  (req: AuthenticatedRequest, res, next) => {
     TimerController.submitReactionTime(req, res).catch(next);
-});
+  },
+);
 
 /**
  * @swagger
@@ -68,8 +75,12 @@ router.post('/submit-reaction-time', authenticate, (req: AuthenticatedRequest, r
  *       400:
  *         description: Bad request
  */
-router.get('/get-reaction-times', authenticate, (req: AuthenticatedRequest, res, next) => {
+router.get(
+  '/get-reaction-times',
+  authenticate,
+  (req: AuthenticatedRequest, res, next) => {
     TimerController.getReactionTimes(req, res).catch(next);
-});
+  },
+);
 
 export default router;
