@@ -15,8 +15,9 @@
         ]
     },
     "include": [
-        "src/**/*.ts" // Inclure tous les fichiers TypeScript dans src
-, "../auth.integration.test.ts"    ],
+        "src/**/*.ts", // Inclure tous les fichiers TypeScript dans src
+        "../auth.integration.test.ts" // Inclure le fichier auth.integration.test.ts
+    ],
     "exclude": [
         "node_modules", // Exclure le répertoire node_modules
         "dist" // Exclure le répertoire dist
