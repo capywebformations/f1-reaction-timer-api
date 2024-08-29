@@ -8,33 +8,37 @@ jobs:
   test:
     runs-on: ubuntu-latest   
     services:
-      mongodb:
-        image: mongo:7.0
+      mongo:
+        image: mongo:7.0.14
         ports:
           - 27017:27017
-        options: --health-cmd "mongo --eval 'db.runCommand(\"ping\")' --quiet" --health-interval 10s --health-timeout 5s --health-retries 3
+        options: >-
+          --health-cmd "mongo --eval 'db.runCommand(\"ping\")' --quiet"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
     steps:
-    - name: Git checkout
-      uses: actions/checkout@v4
+      - name: Git checkout
+        uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
 
-    - name: Install dependencies
-      run: npm install
-      working-directory: ./api
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./api
 
-    - name: Run linter
-      run: npm run lint
-      working-directory: ./api
+      - name: Run linter
+        run: npm run lint
+        working-directory: ./api
 
-    - name: Run tests
-      run: npx jest --coverage
-      working-directory: ./api
+      - name: Run tests
+        run: npx jest --coverage
+        working-directory: ./api
 
-    - name: Upload results to Codecov
-      uses: codecov/codecov-action@v4
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
