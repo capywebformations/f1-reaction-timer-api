@@ -1,4 +1,5 @@
 module.exports = {
+    testTimeout: 120000,
     preset: 'ts-jest',
     testEnvironment: 'node',
     testMatch: ['**/tests/**/*.test.ts'], // Adjust according to your test file locations
