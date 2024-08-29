@@ -42,3 +42,45 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:5.0
+        ports:
+          - 27017:27017
+        options: --health-cmd "mongo --eval 'db.runCommand(\"ping\")' --quiet" --health-interval 10s --health-timeout 5s --health-retries 3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: ./api
+        run: npm install
+
+      - name: Display MongoDB logs
+        run: docker logs $(docker ps -q --filter "ancestor=mongo:5.0")
+
+      - name: Run tests
+        working-directory: ./api
+        env:
+          MONGODB_URI: ${{ secrets.MONGO_URI }}
+          BACKEND_PORT: ${{ secrets.PORT }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: npm test
