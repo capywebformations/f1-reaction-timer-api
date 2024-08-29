@@ -12,11 +12,7 @@ jobs:
         image: mongo:7.0.14
         ports:
           - 27017:27017
-        # options: >-
-        #   --health-cmd "mongo --eval 'db.runCommand(\"ping\")' --quiet"
-        #   --health-interval 20s
-        #   --health-timeout 20s
-        #   --health-retries 5
+
     steps:
       - name: Git checkout
         uses: actions/checkout@v4
@@ -40,7 +36,7 @@ jobs:
           MONGO_URI: ${{ secrets.MONGO_URI }}
           PORT: ${{ secrets.PORT }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        run: npx jest --coverage
+        run: npx jest --coverage --detectOpenHandles
 
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v4

@@ -6,6 +6,7 @@ import { ensureDatabaseConnection } from '../../config/database';
 let token: string;
 
 beforeAll(async () => {
+  jest.setTimeout(120000); // Increase the timeout for Jest tests for Github Actions
   await mongoose.connect(process.env.MONGO_URI!);
 
   // Create a user and get a valid token

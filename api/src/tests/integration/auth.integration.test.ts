@@ -5,6 +5,7 @@ import { ensureDatabaseConnection } from '../../config/database';
 
 beforeAll(async () => {
   // Connect to the database before running the tests
+  jest.setTimeout(120000); // Increase the timeout for Jest tests for Github Actions
   await mongoose.connect(process.env.MONGO_URI!);
 });
 
