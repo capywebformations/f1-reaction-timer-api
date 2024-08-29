@@ -1,21 +1,19 @@
-# Use Node.js LTS version as base
-FROM node:20.17-slim
-
-# Set working directory
+FROM node:20.17-slim AS builder
 WORKDIR /home/node/app
 
-# Install dependencies
 COPY ./api/package*.json ./
-
-RUN npm install
+RUN npm ci --only=production --ignore-scripts
 
 COPY ./api .
 
-# Build the TypeScript project
-RUN npm run build
 
-# Expose the application port
+FROM node:20.17-slim AS production
+WORKDIR /home/node/app
+COPY --from=builder /home/node/app .
+
 EXPOSE 3000
 
-# Start the application
-CMD npm run dev
+RUN useradd --user-group --create-home --shell /bin/false appuser
+USER appuser
+
+CMD ["npm", "start"]
