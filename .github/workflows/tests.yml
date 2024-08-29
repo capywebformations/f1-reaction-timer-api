@@ -1,5 +1,9 @@
 name: Run tests and linting
-on: [pull_request]
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   tests:
@@ -7,43 +11,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          node-version: "20.8.1"
+          fetch-depth: 0
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Cache Node modules
-        uses: actions/cache@v2
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          path: ~/.pnpm
-          key: pnpm-${{ runner.os }}-${{ hashFiles('api/pnpm-lock.json') }}
-          restore-keys: |
-            pnpm-${{ runner.os }}-
+          node-version: "20.17.0"
 
       - name: Install dependencies
-        run: pnpm install
-        working-directory: api
-
-      - name: Install nyc for coverage
-        run: pnpm install nyc --save-dev
+        run: npm install
         working-directory: api
 
       - name: Run linter
-        run: pnpm run lint
+        run: npm run lint
         working-directory: api
 
-      - name: Run tests with coverage
-        run: npx nyc pnpm test
+      - name: Run tests
+        run: npx jest --coverage
         working-directory: api
 
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.0.1
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./api/coverage/*.json
