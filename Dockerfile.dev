@@ -2,7 +2,7 @@ FROM node:20.17-slim AS builder
 WORKDIR /home/node/app
 
 COPY ./api/package*.json ./
-RUN npm install
+RUN npm install --ignore-scripts
 
 COPY ./api .
 

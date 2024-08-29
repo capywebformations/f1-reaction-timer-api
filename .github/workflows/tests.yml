@@ -5,13 +5,14 @@ on:
   pull_request:
     branches: [ "main", "develop" ]
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20.x]
-        mongodb-version: ['7.0']
-
+  test:
+    runs-on: ubuntu-latest   
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+        options: --health-cmd "mongo --eval 'db.runCommand(\"ping\")' --quiet" --health-interval 10s --health-timeout 5s --health-retries 3
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
@@ -19,30 +20,21 @@ jobs:
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
-
-    - name: Start MongoDB
-      uses: supercharge/mongodb-github-action@1.11.0
-      with:
-        mongodb-version: ${{ matrix.mongodb-version }}
+        node-version: '20.x'
 
     - name: Install dependencies
       run: npm install
-      working-directory: api
+      working-directory: ./api
 
     - name: Run linter
       run: npm run lint
-      working-directory: api
+      working-directory: ./api
 
     - name: Run tests
       run: npx jest --coverage
-      working-directory: api
+      working-directory: ./api
 
     - name: Upload results to Codecov
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./api/coverage/*.json
-        flags: unittests
-        name: code-coverage-report
-        fail_ci_if_error: true
