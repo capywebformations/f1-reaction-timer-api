@@ -1,43 +1,48 @@
 name: Run tests and linting
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main" ]
-
+    branches: [ "main", "develop" ]
 jobs:
-  tests:
-    name: Run tests and check code quality
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+        mongodb-version: ['7.0']
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    - name: Git checkout
+      uses: actions/checkout@v4
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20.17.0"
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: api
+    - name: Start MongoDB
+      uses: supercharge/mongodb-github-action@1.11.0
+      with:
+        mongodb-version: ${{ matrix.mongodb-version }}
 
-      - name: Run linter
-        run: npm run lint
-        working-directory: api
+    - name: Install dependencies
+      run: npm install
+      working-directory: api
 
-      - name: Run tests
-        run: npx jest --coverage
-        working-directory: api
+    - name: Run linter
+      run: npm run lint
+      working-directory: api
 
-      - name: Upload results to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./api/coverage/*.json
-          flags: unittests
-          name: code-coverage-report
-          fail_ci_if_error: true
+    - name: Run tests
+      run: npx jest --coverage
+      working-directory: api
+
+    - name: Upload results to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./api/coverage/*.json
+        flags: unittests
+        name: code-coverage-report
+        fail_ci_if_error: true
