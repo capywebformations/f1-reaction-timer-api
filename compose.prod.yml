@@ -1,8 +1,8 @@
 services:
   api:
     build:
-      context: .
-      dockerfile: Dockerfile.prod
+      context: ./
+      dockerfile: docker/node/Dockerfile.prod
     ports:
       - "3000:3000"
     env_file:
@@ -19,7 +19,9 @@ services:
       - traefik_routing
 
   mongo:
-    image: mongo:7.0.14
+    build:
+      context: ./
+      dockerfile: docker/mongo/Dockerfile
     ports:
       - "27017:27017"
     restart: always
