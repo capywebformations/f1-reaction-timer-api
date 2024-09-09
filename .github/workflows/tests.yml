@@ -27,9 +27,13 @@ jobs:
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
 
-    - run: npm install
+    - name: Install dependencies
+      working-directory: ./api
+      run: npm install
 
-    - run: npx jest --coverage
+    - name: Run tests
+      working-directory: ./api
+      run: npx jest --coverage
       env:
         CI: true
 
