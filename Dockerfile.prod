@@ -16,4 +16,4 @@ EXPOSE 3000
 RUN useradd --user-group --create-home --shell /bin/false appuser
 USER appuser
 
-CMD ["npm", "start"]
+CMD ["node", "dist/server.js"]

@@ -10,6 +10,13 @@ services:
     depends_on:
       - mongo
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.node.rule=Host(`f1-api.devprod.fr`)"
+      - "traefik.http.routers.node.entrypoints=websecure"
+      - "traefik.http.routers.node.tls.certresolver=myresolver"
+    networks:
+      - traefik_routing
 
   mongo:
     image: mongo:7.0.14
@@ -18,5 +25,11 @@ services:
     restart: always
     volumes:
       - mongo-data:/data/db
+    networks:
+      - traefik_routing
 volumes:
   mongo-data:
+
+networks:
+  traefik_routing:
+    external: true

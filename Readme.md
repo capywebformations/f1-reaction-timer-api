@@ -28,7 +28,6 @@ The project is structured as follows:
 
 To run this project, you need to have the following dependencies installed:
 
-- [Node.js](https://nodejs.org/) (version 20.x)
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
 
@@ -47,11 +46,7 @@ cd f1-reaction-timer-api
 2/ **Install dependencies:**
 
 ````sh
-cd api
-````
-
-````sh
-npm install
+make install
 ````
 
 3/ **Set up environment variables:**
@@ -73,7 +68,7 @@ Fill in the required values:
 ### Development
 
 ````sh
-docker compose up --build -d
+make up
 ````
 
 This will start the API server on <http://localhost:3000> and the MongoDB server on mongodb://localhost:27017.
@@ -86,7 +81,7 @@ The api documentation is accessible on <http://localhost:3000/api-docs>
 docker compose -f compose.prod.yml up --build -d
 ````
 
-This will start the API server on <http://localhost:3000> and the MongoDB server on mongodb://localhost:27017.
+This will start the API server on specified uri in compose.prod.yml and the MongoDB server on mongodb://localhost:27017.
 No devDependencies in this mode.
 
 ## Dependency List

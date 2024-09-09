@@ -6,15 +6,13 @@ RUN npm install --ignore-scripts
 
 COPY ./api .
 
+RUN npm run build
 
-FROM node:20.17-slim AS development
-WORKDIR /home/node/app
-COPY --from=builder /home/node/app .
+ENV TZ=Europe/Paris
 
 EXPOSE 3000
 
 RUN useradd --user-group --create-home --shell /bin/false appuser
 USER appuser
-
 
 CMD ["npm", "run", "dev"]

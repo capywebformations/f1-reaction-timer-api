@@ -1,8 +1,8 @@
 services:
   api:
     build:
-      context: .
-      dockerfile: Dockerfile.dev
+      context: ./
+      dockerfile: docker/node/Dockerfile
     ports:
       - "3000:3000"
     env_file:
@@ -13,6 +13,8 @@ services:
       - ./api/:/home/node/app
 
   mongo:
-    image: mongo:7.0.14
+    build:
+      context: ./
+      dockerfile: docker/mongo/Dockerfile
     ports:
       - "27017:27017"
