@@ -30,10 +30,7 @@ describe('Server Initialization', () => {
     expect(app.listen).toHaveBeenCalledWith(PORT, expect.any(Function));
 
     // Assert console.log calls in the correct order
-    expect(console.log).toHaveBeenNthCalledWith(1, 'Connected to MongoDB');
-    expect(console.log).toHaveBeenNthCalledWith(
-      2,
-      `Server running on port ${PORT}`,
-    );
+    expect(console.log).toHaveBeenNthCalledWith(1,`Server running on port ${PORT}`);
+    expect(console.log).toHaveBeenNthCalledWith(2, 'MongoDB connected successfully');
   });
 });
