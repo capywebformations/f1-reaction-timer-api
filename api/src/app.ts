@@ -1,5 +1,4 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import authRoutes from './routes/auth.routes';
 import timerRoutes from './routes/timer.routes';
 import { errorHandler } from './middlewares/error.middleware';
