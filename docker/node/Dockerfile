@@ -12,7 +12,6 @@ ENV TZ=Europe/Paris
 
 EXPOSE 3000
 
-RUN useradd --user-group --create-home --shell /bin/false appuser
-USER appuser
+USER node
 
 CMD ["npm", "run", "dev"]

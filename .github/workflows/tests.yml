@@ -12,33 +12,36 @@ jobs:
         image: mongo:7.0.14
         ports:
           - 27017:27017
+        options: --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'" --health-interval 10s --health-timeout 5s --health-retries 3
 
     steps:
       - name: Git checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
+      - name: Set up Docker
+        run: |
+          docker build -t node-app -f docker/node/Dockerfile .
+          docker run -d --name node-api --link mongo:mongo -e MONGO_URI="mongodb://mongo:27017" -p 3000:3000 node-app
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./api
+      - name: Wait for MongoDB to be ready
+        run: |
+          echo "Waiting for MongoDB to be ready..."
+          sleep 20 # Donne le temps à MongoDB de se lancer correctement
+
+      - name: Run tests
+        run: |
+          docker exec node-app-container npx jest --coverage
 
       - name: Run linter
         run: npm run lint
         working-directory: ./api
 
-      - name: Run tests
-        working-directory: ./api
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          PORT: ${{ secrets.PORT }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        run: npx jest --coverage --detectOpenHandles
-
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Clean up
+        run: |
+          docker stop node-app-container
+          docker rm node-app-container
