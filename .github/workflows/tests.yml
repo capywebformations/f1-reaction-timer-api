@@ -1,7 +1,5 @@
 name: Run tests and linting
 on:
-  push:
-    branches: [ "main", "develop" ]
   pull_request:
     branches: [ "main", "develop" ]
 
@@ -27,6 +25,9 @@ jobs:
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
 
+    - name: Set MongoDB URI
+      run: echo "MONGO_URI=mongodb://localhost:27017/testdb" >> $GITHUB_ENV
+
     - name: Install dependencies
       working-directory: ./api
       run: npm install
@@ -36,6 +37,7 @@ jobs:
       run: npx jest --coverage
       env:
         CI: true
+        MONGO_URI: mongodb://localhost:27017/testdb
 
     - name: Run linter
       run: npm run lint
