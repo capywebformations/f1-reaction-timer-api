@@ -2,43 +2,47 @@ name: Run tests and linting
 on:
   push:
     branches: [ "main", "develop" ]
-  pull_request:
-    branches: [ "main", "develop" ]
+
 jobs:
-  test:
-    runs-on: ubuntu-latest   
-    services:
-      mongo:
-        image: mongo:7.0.14
-        ports:
-          - 27017:27017
+  build:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Git checkout
-        uses: actions/checkout@v4
+    - name: Git checkout
+      uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
+    - name: Use Node.js 20.17.0
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.17.0
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./api
+    - name: Start MongoDB
+      uses: supercharge/mongodb-github-action@1.11.0
+      with:
+        mongodb-version: 7.0
 
-      - name: Run linter
-        run: npm run lint
-        working-directory: ./api
+    - name: Set environment variables for development
+      run: |
+        echo "MONGO_URI=mongodb://localhost:27017/testdb" >> $GITHUB_ENV
+        echo "JWT_SECRET=secretKey" >> $GITHUB_ENV
 
-      - name: Run tests
-        working-directory: ./api
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          PORT: ${{ secrets.PORT }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        run: npx jest --coverage --detectOpenHandles
+    - name: Install dependencies
+      working-directory: ./api
+      run: npm install
 
-      - name: Upload results to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Run linter
+      run: npm run lint
+      working-directory: ./api
+
+    - name: Run tests
+      working-directory: ./api
+      run: npx jest --coverage
+      env:
+        CI: true
+        MONGO_URI: mongodb://localhost:27017/testdb
+        JWT_SECRET: secretKey
+      
+    - name: Upload results to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
