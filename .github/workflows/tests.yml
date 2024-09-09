@@ -26,7 +26,9 @@ jobs:
         mongodb-version: ${{ matrix.mongodb-version }}
 
     - name: Set MongoDB URI
-      run: echo "MONGO_URI=mongodb://localhost:27017/testdb" >> $GITHUB_ENV
+      run: |
+        echo "MONGO_URI=mongodb://localhost:27017/testdb" >> $GITHUB_ENV
+        echo "JWT_SECRET=secretKey" >> $GITHUB_ENV
 
     - name: Install dependencies
       working-directory: ./api
@@ -38,6 +40,7 @@ jobs:
       env:
         CI: true
         MONGO_URI: mongodb://localhost:27017/testdb
+        JWT_SECRET: secretKey
 
     - name: Run linter
       run: npm run lint
