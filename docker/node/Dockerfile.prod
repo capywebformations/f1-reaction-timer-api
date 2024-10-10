@@ -8,7 +8,7 @@ RUN npm run build
 
 FROM node:20.17-slim AS production
 WORKDIR /home/node/app
-COPY --from=builder /home/node/app .
+COPY --from=builder /home/node/app/dist .
 
 ENV TZ=Europe/Paris
 
@@ -16,4 +16,4 @@ EXPOSE 3000
 
 USER node
 
-CMD ["node", "dist/server.js"]
+CMD ["node", "server.js"]
